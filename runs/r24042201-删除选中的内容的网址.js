@@ -1,4 +1,4 @@
-async function script(item) {
+async function func(item) {
     if (!item) {
         return "No item"
     }
@@ -29,4 +29,4 @@ async function script(item) {
     }
 }
 
-await script(item)
+await func(item)
