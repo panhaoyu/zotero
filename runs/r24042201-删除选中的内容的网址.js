@@ -20,7 +20,7 @@ async function script(item) {
     const prefix = 'https://webofscience.clarivate.cn/wos/alldb/summary/'
 
 // 检查是否存在网址
-    if (urlField.startsWith(prefix) {
+    if (urlField.startsWith(prefix)) {
         // 删除网址
         item.setField('url', '');
 
