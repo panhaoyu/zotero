@@ -6,29 +6,35 @@
 - 不必向我解释编码的过程，不要先为我解释要做什么事情，准备做什么事情，而是直接给我代码。
 - 避免使用正则表达式
  */
-for (const item of ZoteroPane.getSelectedItems()) {
-    const notes = item.getNotes().map(i => Zotero.Items.get(i).getNote()).map(noteContent => {
-        noteContent = noteContent.replace('<p>', ""); // 移除所有HTML标签
-        noteContent = noteContent.replace('</p>', "");  // 移除所有HTML标签
-        if (!noteContent.startsWith('NoteExpress Custom Data')) {
-            // todo 删除该条笔记
-            return
-        }
+(async () => {
 
-        // 转换注释内容为键值对格式
-        const keyValuePairs = {};
-        const lines = noteContent.split('<br/>');
-        for (const line of lines) {
-            const [key, value] = line.split(':');
-            if (key && value) {
-                keyValuePairs[key.trim()] = value.trim();
+    for (const item of ZoteroPane.getSelectedItems()) {
+        const notes = item.getNotes().map(i => {
+            const noteItem = Zotero.Items.get(i)
+            let noteContent = noteItem.getNote()
+            noteContent = noteContent.replace('<p>', ""); // 移除所有HTML标签
+            noteContent = noteContent.replace('</p>', "");  // 移除所有HTML标签
+            if (!noteContent.startsWith('NoteExpress Custom Data')) {
+                // todo erase() called on Zotero.Item without a wrapping transaction -- use eraseTx() instead
+                noteItem.erase()
+                return
             }
-        }
 
-        return keyValuePairs;
-    }).filter(i => i !== undefined)
-    if (notes.length !== 1) {
-        throw '无法识别到相应的笔记'
+            // 转换注释内容为键值对格式
+            const keyValuePairs = {};
+            const lines = noteContent.split('<br/>');
+            for (const line of lines) {
+                const [key, value] = line.split(':');
+                if (key && value) {
+                    keyValuePairs[key.trim()] = value.trim();
+                }
+            }
+
+            return keyValuePairs;
+        }).filter(i => i !== undefined)
+        if (notes.length !== 1) {
+            throw '无法识别到相应的笔记'
+        }
+        const meta = notes[0]
     }
-    const meta = notes[0]
-}
+})().then()
