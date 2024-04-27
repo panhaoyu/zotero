@@ -51,7 +51,7 @@ ER  -
         fileStats[key].push(i);
     })
     let i = 0
-    ZoteroPane.getSelectedItems().map(item => (async () => {
+    await Promise.all(ZoteroPane.getSelectedItems().map(item => (async () => {
         i += 1
         console.log(`Processing ${i}: ${item.getField('title')}`)
         const notes = item.getNotes().map(i => {
@@ -114,5 +114,5 @@ ER  -
                 await noteItem.erase()
             });
         })
-    })())
+    })()))
 })().then()
