@@ -51,7 +51,7 @@ ER  -
         fileStats[key].push(i);
     })
     let i = 0
-    for (const item of ZoteroPane.getSelectedItems()) {
+    ZoteroPane.getSelectedItems().map(item => (async () => {
         i += 1
         console.log(`Processing ${i}: ${item.getField('title')}`)
         const notes = item.getNotes().map(i => {
@@ -78,7 +78,8 @@ ER  -
             return keyValuePairs;
         }).filter(i => i !== undefined)
         if (notes.length !== 1) {
-            throw '无法识别到相应的笔记'
+            console.error('无法识别到相应的笔记')
+            return
         }
         const meta = notes[0]
         const noteExpressId = meta['NoteExpress ID']
@@ -89,7 +90,7 @@ ER  -
             // .map(i => i.startsWith('目录-') ? i.split('-', 2)[1] : i)
             .map(i => `#${i}`)
         tags.push([...Array(rating).keys()].map(_ => '⭐').join(''))
-        item.setTags(tags.map(tag => ({tag})));
+        item.setTags(tags.filter(t => t.length > 0).map(tag => ({tag})));
 
         if (subject) {
             const extra = item.getField('extra')
@@ -113,5 +114,5 @@ ER  -
                 await noteItem.erase()
             });
         })
-    }
+    })())
 })().then()
