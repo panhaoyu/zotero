@@ -9,10 +9,8 @@
  */
 (async () => {
     const baseDir = 'F:\\OneDrive\\1002-data\\24041201-note-express\\rock.Attachments\\'
-    const files = []
     const fileStats = {};
     await Zotero.File.iterateDirectory(baseDir, async i => {
-        files.push(i)
         const fileNameParts = i.name.split(' '); // Assumes file names are separated by spaces and the first part is the numeric key
         const key = fileNameParts[0]; // The first part of the filename, expected to be numeric
         if (!fileStats[key]) {
