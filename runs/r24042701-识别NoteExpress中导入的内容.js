@@ -7,7 +7,6 @@
 - 避免使用正则表达式
  */
 (async () => {
-
     for (const item of ZoteroPane.getSelectedItems()) {
         const notes = item.getNotes().map(i => {
             const noteItem = Zotero.Items.get(i)
@@ -37,5 +36,18 @@
             throw '无法识别到相应的笔记'
         }
         const meta = notes[0]
+        const noteExpressId = meta['NoteExpress ID']
+        const rating = meta['Rating']
+        const tags = meta['Tags'].split('; ').map(i => i.trim()).map(i => {
+            if (i.startsWith('目录-')) {
+                return i.split('-', 2)[1]
+            } else {
+                return i
+            }
+        }).map(i => `#${i}`)
+        item.setTags(tags.map(tag => ({tag})));
+        await Zotero.DB.executeTransaction(async () => {
+            await item.save();
+        });
     }
 })().then()
