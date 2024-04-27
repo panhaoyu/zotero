@@ -15,8 +15,9 @@
             noteContent = noteContent.replace('<p>', ""); // 移除所有HTML标签
             noteContent = noteContent.replace('</p>', "");  // 移除所有HTML标签
             if (!noteContent.startsWith('NoteExpress Custom Data')) {
-                // todo erase() called on Zotero.Item without a wrapping transaction -- use eraseTx() instead
-                noteItem.erase()
+                Zotero.DB.executeTransaction(async () => {
+                    await noteItem.erase()
+                });
                 return
             }
 
