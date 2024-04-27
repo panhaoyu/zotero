@@ -82,7 +82,7 @@ ER  -
         }
         const meta = notes[0]
         const noteExpressId = meta['NoteExpress ID']
-        const rating = meta['Rating']
+        const rating = Number.parseInt(meta['Rating'] ?? `0`)
         const subject = meta['Subject']
         const tags = meta['Tags'].split('; ')
             .map(i => i.trim())
@@ -104,8 +104,7 @@ ER  -
         const files = fileStats[noteExpressId] ?? []
         for (const file of files) {
             await Zotero.Attachments.importFromFile({
-                file: file.path,
-                parentItemID: item.id,
+                file: file.path, parentItemID: item.id,
             })
         }
         item.getNotes().map(i => {
