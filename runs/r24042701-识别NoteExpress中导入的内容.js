@@ -80,12 +80,21 @@ ER  -
         const meta = notes[0]
         const noteExpressId = meta['NoteExpress ID']
         const rating = meta['Rating']
+        const subject = meta['Subject']
         const tags = meta['Tags'].split('; ')
             .map(i => i.trim())
             // .map(i => i.startsWith('目录-') ? i.split('-', 2)[1] : i)
             .map(i => `#${i}`)
         tags.push([...Array(rating).keys()].map(i => '⭐').join(''))
         item.setTags(tags.map(tag => ({tag})));
+
+        if (subject) {
+            const extra = item.getField('extra')
+            const newExtra = `${extra}\nNESubject: ${subject}`
+            item.setField('extra', newExtra)
+        }
+
+
         await Zotero.DB.executeTransaction(async () => {
             await item.save();
         });
