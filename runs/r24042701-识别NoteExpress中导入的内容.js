@@ -88,7 +88,7 @@ ER  -
             .map(i => i.trim())
             // .map(i => i.startsWith('目录-') ? i.split('-', 2)[1] : i)
             .map(i => `#${i}`)
-        tags.push([...Array(rating).keys()].map(i => '⭐').join(''))
+        tags.push([...Array(rating).keys()].map(_ => '⭐').join(''))
         item.setTags(tags.map(tag => ({tag})));
 
         if (subject) {
