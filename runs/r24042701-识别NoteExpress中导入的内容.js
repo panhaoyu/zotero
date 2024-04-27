@@ -49,8 +49,10 @@ ER  -
         }
         fileStats[key].push(i);
     })
+    let i = 0
     for (const item of ZoteroPane.getSelectedItems()) {
-        console.log(`Processing: ${item.getField('title')}`)
+        i += 1
+        console.log(`Processing ${i}: ${item.getField('title')}`)
         const notes = item.getNotes().map(i => {
             const noteItem = Zotero.Items.get(i)
             let noteContent = noteItem.getNote()
