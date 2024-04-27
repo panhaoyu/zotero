@@ -103,7 +103,7 @@ ER  -
         });
         const files = fileStats[noteExpressId] ?? []
         for (const file of files) {
-            const attachmentItem = await Zotero.Attachments.importFromFile({
+            await Zotero.Attachments.importFromFile({
                 file: file.path,
                 parentItemID: item.id,
             })
