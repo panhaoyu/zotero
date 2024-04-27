@@ -58,7 +58,6 @@
         tags.push([...Array(rating).keys()].map(i => '⭐').join(''))
         item.setTags(tags.map(tag => ({tag})));
         await Zotero.DB.executeTransaction(async () => {
-            console.log(item.getTags())
             await item.save();
         });
         const files = fileStats[noteExpressId] ?? []
