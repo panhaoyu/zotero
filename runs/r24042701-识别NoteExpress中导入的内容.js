@@ -19,6 +19,7 @@
         fileStats[key].push(i);
     })
     for (const item of ZoteroPane.getSelectedItems()) {
+        console.log(`Processing: ${item.getField('title')}`)
         const notes = item.getNotes().map(i => {
             const noteItem = Zotero.Items.get(i)
             let noteContent = noteItem.getNote()
@@ -48,13 +49,10 @@
         const meta = notes[0]
         const noteExpressId = meta['NoteExpress ID']
         const rating = meta['Rating']
-        const tags = meta['Tags'].split('; ').map(i => i.trim()).map(i => {
-            if (i.startsWith('目录-')) {
-                return i.split('-', 2)[1]
-            } else {
-                return i
-            }
-        }).map(i => `#${i}`)
+        const tags = meta['Tags'].split('; ')
+            .map(i => i.trim())
+            // .map(i => i.startsWith('目录-') ? i.split('-', 2)[1] : i)
+            .map(i => `#${i}`)
         tags.push([...Array(rating).keys()].map(i => '⭐').join(''))
         item.setTags(tags.map(tag => ({tag})));
         await Zotero.DB.executeTransaction(async () => {
