@@ -40,7 +40,6 @@
                     keyValuePairs[key.trim()] = value.trim();
                 }
             }
-
             return keyValuePairs;
         }).filter(i => i !== undefined)
         if (notes.length !== 1) {
@@ -56,16 +55,24 @@
                 return i
             }
         }).map(i => `#${i}`)
+        tags.push([...Array(rating).keys()].map(i => '⭐').join(''))
         item.setTags(tags.map(tag => ({tag})));
         await Zotero.DB.executeTransaction(async () => {
+            console.log(item.getTags())
             await item.save();
         });
-
-        try {
-            const v = await Zotero.File.iterateDirectory(baseDir, true)
-            console.log(v)
-        } catch (error) {
-            console.log('Error accessing directory:', error);
+        const files = fileStats[noteExpressId] ?? []
+        for (const file of files) {
+            const attachmentItem = await Zotero.Attachments.importFromFile({
+                file: file.path,
+                parentItemID: item.id,
+            })
         }
+        item.getNotes().map(i => {
+            const noteItem = Zotero.Items.get(i)
+            Zotero.DB.executeTransaction(async () => {
+                await noteItem.erase()
+            });
+        })
     }
 })().then()
