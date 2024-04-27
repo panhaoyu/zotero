@@ -4,6 +4,7 @@
 遵循以下要求：
 - 不要使用Zotero.debug而是要使用console.log进行日志的输出。
 - 不必向我解释编码的过程，不要先为我解释要做什么事情，准备做什么事情，而是直接给我代码。
+- 避免使用正则表达式
  */
 for (const item of ZoteroPane.getSelectedItems()) {
     const notes = item.getNotes().map(i => Zotero.Items.get(i).getNote()).map(noteContent => {
